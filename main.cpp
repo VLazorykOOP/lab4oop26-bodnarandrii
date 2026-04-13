@@ -240,10 +240,10 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            testTask1(); // Виклик окремої функції для 1 завдання
+            testTask1(); 
         } 
         else if (choice == 2) {
-            testTask2(); // Виклик окремої функції для 2 завдання
+            testTask2(); 
         } 
         else if (choice != 0) {
             cout << "Invalid choice! Try again.\n";
