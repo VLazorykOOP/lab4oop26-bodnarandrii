@@ -12,7 +12,6 @@ private:
     static int count;
 
 public:
-    // --- 1. Конструктори та деструктор ---
     VectorInt() : size(1), codeError(0) { 
         try { data = new int[1]{0}; } catch(bad_alloc&) { codeError = 2; data = nullptr; }
         count++; 
@@ -37,16 +36,14 @@ public:
     static int getCount() { return count; }
     int getError() { return codeError; }
 
-    // --- 2. Унарнi операцiї ---
-    VectorInt& operator++() { for(int i=0; i<size; i++) data[i]++; return *this; } // Префiкс
-    VectorInt operator++(int) { VectorInt temp(*this); ++(*this); return temp; } // Постфiкс
-    VectorInt& operator--() { for(int i=0; i<size; i++) data[i]--; return *this; } // Префiкс
-    VectorInt operator--(int) { VectorInt temp(*this); --(*this); return temp; } // Постфiкс
-    bool operator!() { return size != 0; } // Логiчне заперечення
-    VectorInt operator~() { VectorInt temp(size); for(int i=0; i<size; i++) temp.data[i] = ~data[i]; return temp; } // Побiтове
-    VectorInt operator-() { VectorInt temp(size); for(int i=0; i<size; i++) temp.data[i] = -data[i]; return temp; } // Арифметичний мiнус
+    VectorInt& operator++() { for(int i=0; i<size; i++) data[i]++; return *this; } 
+    VectorInt operator++(int) { VectorInt temp(*this); ++(*this); return temp; } 
+    VectorInt& operator--() { for(int i=0; i<size; i++) data[i]--; return *this; } 
+    VectorInt operator--(int) { VectorInt temp(*this); --(*this); return temp; } 
+    bool operator!() { return size != 0; } 
+    VectorInt operator~() { VectorInt temp(size); for(int i=0; i<size; i++) temp.data[i] = ~data[i]; return temp; } 
+    VectorInt operator-() { VectorInt temp(size); for(int i=0; i<size; i++) temp.data[i] = -data[i]; return temp; } 
 
-    // --- 3. Операцiї присвоєння (через функцiї класу) ---
     VectorInt& operator=(const VectorInt& other) {
         if (this != &other) {
             delete[] data; size = other.size; codeError = other.codeError;
@@ -79,7 +76,6 @@ public:
         int m = min(size, other.size); for(int i=0; i<m; i++) data[i] &= other.data[i]; return *this;
     }
 
-    // --- 4. Бiнарнi операцiї ---
     VectorInt operator+(const VectorInt& other) { VectorInt temp(*this); temp += other; return temp; }
     VectorInt operator-(const VectorInt& other) { VectorInt temp(*this); temp -= other; return temp; }
     VectorInt operator*(int val) { VectorInt temp(*this); temp *= val; return temp; }
@@ -89,7 +85,6 @@ public:
     VectorInt operator^(const VectorInt& other) { VectorInt temp(*this); temp ^= other; return temp; }
     VectorInt operator&(const VectorInt& other) { VectorInt temp(*this); temp &= other; return temp; }
 
-    // --- 5. Порiвняння (рiвнiсть та нерiвнiсть) ---
     bool operator==(const VectorInt& other) {
         if (size != other.size) return false;
         for (int i = 0; i < size; i++) if (data[i] != other.data[i]) return false;
@@ -106,21 +101,19 @@ public:
     bool operator>=(const VectorInt& other) { return *this > other || *this == other; }
     bool operator<=(const VectorInt& other) { return *this < other || *this == other; }
 
-    // --- 6. Спецiальнi оператори ([], (), new, delete) ---
     int& operator[](int index) {
         if (index < 0 || index >= size) {
             codeError = 1; 
-            return data[size - 1]; // Повертаємо останнiй елемент 
+            return data[size - 1]; 
         }
         codeError = 0;
         return data[index];
     }
-    void operator()(int val) { for(int i=0; i<size; i++) data[i] = val; } // Заповнити весь вектор числом
+    void operator()(int val) { for(int i=0; i<size; i++) data[i] = val; } 
     
     void* operator new(size_t size) { return ::operator new(size); }
     void operator delete(void* p) { ::operator delete(p); }
 
-    // --- 7. Дружнi функцiї вводу/виводу (через зсуви << та >>) ---
     friend ostream& operator<<(ostream& os, const VectorInt& v) {
         os << "[ "; for (int i = 0; i < v.size; i++) os << v.data[i] << " "; os << "]"; return os;
     }
@@ -130,7 +123,6 @@ public:
 };
 
 int VectorInt::count = 0;
-
 
 class NumberDictionary {
 private:
@@ -178,11 +170,69 @@ public:
 };
 
 
+void testTask1() {
+    cout << "\n--- Running Task 1.1 ---\n";
+    
+    int size1, val1, size2, val2;
+
+    // Введення першого вектора
+    cout << "Enter size for Vector 1: ";
+    cin >> size1;
+    cout << "Enter value to fill Vector 1: ";
+    cin >> val1;
+    VectorInt v1(size1, val1);
+
+    // Введення другого вектора
+    cout << "Enter size for Vector 2: ";
+    cin >> size2;
+    cout << "Enter value to fill Vector 2: ";
+    cin >> val2;
+    VectorInt v2(size2, val2);
+
+    // Вектор для результатів 
+    int maxSize = (size1 > size2) ? size1 : size2;
+    VectorInt v3(maxSize, 0);  
+    
+    cout << "\nv1 = " << v1 << "\nv2 = " << v2 << endl;
+    
+    // Комплексний вираз
+    cout << "Calculating expression: v3 = (v1 + v2) * 2 - (-v2)" << endl;
+    v3 = (v1 + v2) * 2 - (-v2);
+    cout << "Result: v3 = " << v3 << endl;
+
+    // Додаткові оператори
+    v3 /= 2;
+    cout << "After v3 /= 2: " << v3 << endl;
+
+    v3(7); 
+    cout << "After calling v3(7) [filling with sevens]: " << v3 << endl;
+
+    cout << "Total vectors in memory: " << VectorInt::getCount() << endl;
+}
+
+void testTask2() {
+    cout << "\n--- Running Task 2.1 ---\n";
+    NumberDictionary dict;
+    
+    cout << "Dictionary successfully created!\n";
+    cout << dict; 
+    
+    int num;
+    cout << "\nEnter a number from 1 to 100: ";
+    cin >> num;
+
+    cout << "Result via dict[num]: " << dict[num] << endl;
+
+    if (dict.getError() != 0) {
+        cout << "Caught an error! CodeError: " << dict.getError() << endl;
+    }
+}
+
 int main() {
     int choice = -1;
 
     while (choice != 0) {
-        cout << "    MAIN MENU   \n";
+        cout << "    MAIN MENU    \n";
         cout << "1. Task 1.1 \n";
         cout << "2. Task 2.1 \n";
         cout << "0. Exit\n";
@@ -190,41 +240,10 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            cout << "\n--- Running Task 1.1 ---\n";
-            VectorInt v1(3, 10); // [10 10 10]
-            VectorInt v2(3, 2);  // [2 2 2]
-            VectorInt v3(3, 0);  
-            
-            cout << "v1 = " << v1 << "\nv2 = " << v2 << endl;
-            
-            cout << "Calculating expression: v3 = (v1 + v2) * 2 - (-v2)" << endl;
-            v3 = (v1 + v2) * 2 - (-v2);
-            cout << "Result: v3 = " << v3 << endl;
-
-            v3 /= 2;
-            cout << "After v3 /= 2: " << v3 << endl;
-
-            v3(7); 
-            cout << "After calling v3(7) [filling with sevens]: " << v3 << endl;
-
-            cout << "Total vectors in memory: " << VectorInt::getCount() << endl;
+            testTask1(); // Виклик окремої функції для 1 завдання
         } 
         else if (choice == 2) {
-            cout << "\n--- Running Task 2.1 ---\n";
-            NumberDictionary dict;
-            
-            cout << "Dictionary successfully created!\n";
-            cout << dict; 
-            
-            int num;
-            cout << "\nEnter a number from 1 to 100: ";
-            cin >> num;
-
-            cout << "Result via dict[num]: " << dict[num] << endl;
-
-            if (dict.getError() != 0) {
-                cout << "Caught an error! CodeError: " << dict.getError() << endl;
-            }
+            testTask2(); // Виклик окремої функції для 2 завдання
         } 
         else if (choice != 0) {
             cout << "Invalid choice! Try again.\n";
